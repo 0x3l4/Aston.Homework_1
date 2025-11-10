@@ -1,9 +1,9 @@
 package Collections;
 
-public class HashMap<K, V> implements IMap<K, V>  {
+public class HashMap<K, V> implements IMap<K, V> {
     private int _buckets;
     private int _count;
-    private Node<K,V>[] _map;
+    private Node<K, V>[] _map;
 
     public HashMap() {
         this(4);
@@ -34,7 +34,7 @@ public class HashMap<K, V> implements IMap<K, V>  {
         }
 
         do {
-            if (currentNode.getHash() == keyHash) {
+            if (currentNode.getHash() == keyHash && currentNode.getKey().equals(key)) {
                 V oldValue = currentNode.getValue();
                 currentNode.setValue(value);
 
@@ -58,13 +58,15 @@ public class HashMap<K, V> implements IMap<K, V>  {
     }
 
     public boolean resize(int buckets) {
-        if (_buckets <= buckets) {
+        if (_buckets > buckets) {
             return false;
         }
 
+        _buckets = buckets;
+
         HashMap<K, V> newMap = new HashMap<>(_buckets);
 
-        for(var head : _map) {
+        for (var head : _map) {
             while (head != null) {
                 newMap.put(head.getKey(), head.getValue());
 
@@ -79,24 +81,24 @@ public class HashMap<K, V> implements IMap<K, V>  {
     }
 
     @Override
-    public Node<K, V> get(K key) {
+    public V get(K key) {
         if (isEmpty()) return null;
 
         int keyHash = key.hashCode();
         int indexBucket = indexOf(keyHash);
 
-        var currentNode = _map[indexBucket];
+        INode<K, V> currentNode = _map[indexBucket];
 
-        do {
-            if (currentNode.getHash() == keyHash) {
-                return currentNode;
+        while (currentNode != null) {
+            if (currentNode.getHash() == keyHash && currentNode.getKey().equals(key)) {
+                return currentNode.getValue();
             }
-
-            currentNode = (Node<K, V>) currentNode.getNext();
-        } while (currentNode.hasNext());
+            currentNode = currentNode.getNext();
+        }
 
         return null;
     }
+
 
     @Override
     public int count() {
@@ -121,7 +123,7 @@ public class HashMap<K, V> implements IMap<K, V>  {
             return false;
         }
 
-        if (currentNode.getHash() == keyHash) {
+        if (currentNode.getHash() == keyHash && currentNode.getKey().equals(key)) {
             _map[indexBucket] = (Node<K, V>) currentNode.getNext();
             _count--;
 
@@ -132,8 +134,7 @@ public class HashMap<K, V> implements IMap<K, V>  {
             if (currentNode.getNext().getHash() == keyHash) {
                 if (currentNode.getNext().hasNext()) {
                     currentNode.setNext(currentNode.getNext().getNext());
-                }
-                else {
+                } else {
                     currentNode.setNext(null);
                 }
 
@@ -163,15 +164,17 @@ public class HashMap<K, V> implements IMap<K, V>  {
         var currentNode = _map[indexBucket];
 
         do {
-            if (currentNode.getHash() == keyHash) {
+            if (currentNode.getHash() == keyHash && currentNode.getKey().equals(key)) {
                 return true;
             }
-            if (!currentNode.hasNext()) { return false; }
+            if (!currentNode.hasNext()) {
+                return false;
+            }
 
             currentNode = (Node<K, V>) currentNode.getNext();
         } while (currentNode.hasNext());
 
-        if (currentNode.getHash() == keyHash) {
+        if (currentNode.getHash() == keyHash && currentNode.getKey().equals(key)) {
             return true;
         }
 
