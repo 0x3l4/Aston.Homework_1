@@ -1,8 +1,11 @@
 package Collections;
 
-public interface INode<T> {
+public interface INode<K, V> {
     boolean hasNext();
-    INode<T> next();
-    T getValue();
-    void setValue(T value);
+    INode<K, V> getNext();
+    K getKey();
+    V getValue();
+    int getHash();
+    void setValue(V value);
+    void setNext(INode<K, V> node);
 }

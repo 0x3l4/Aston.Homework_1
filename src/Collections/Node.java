@@ -1,29 +1,50 @@
 package Collections;
 
-public class Node<T> implements INode<T>  {
-    private T _value;
-    private Node<T> _next;
+public class Node<K, V> implements INode<K, V>  {
+    private final int _hash;
+    private K _key;
+    private V _value;
+    private INode<K, V> _next;
+
+    public Node(K key, V value) {
+        _hash = key.hashCode();
+        _key = key;
+        _value = value;
+    }
 
     @Override
     public boolean hasNext() {
-        return _next == null;
+        return _next != null;
     }
 
     @Override
-    public INode<T> next() {
-        _value = _next._value;
-        _next = _next._next;
-
-        return this;
+    public INode<K, V> getNext() {
+        return _next;
     }
 
     @Override
-    public T getValue() {
+    public K getKey() {
+        return _key;
+    }
+
+    @Override
+    public V getValue() {
         return _value;
     }
 
     @Override
-    public void setValue(T value) {
+    public int getHash() {
+        return _hash;
+    }
+
+
+    @Override
+    public void setValue( V value) {
         _value = value;
+    }
+
+    @Override
+    public void setNext(INode<K, V> node) {
+        _next = node;
     }
 }
