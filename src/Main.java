@@ -43,5 +43,15 @@ public class Main {
 
         System.out.println("Попробуем обратиться к элементу, которого нет в коллекции (7)");
         System.out.println(daysInWeek.get(7));
+
+        System.out.println("Проверка на null");
+        HashMap<String, String> strings = new HashMap<>();
+        strings.put(null, null);
+        System.out.println(strings.count());
+        strings.get(null);
+        strings.put(null, "123");
+        System.out.println(strings.count());
+        strings.put("123", null);
+        System.out.println(strings.count());
     }
 }

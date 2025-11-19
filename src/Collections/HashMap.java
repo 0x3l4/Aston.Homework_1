@@ -17,6 +17,8 @@ public class HashMap<K, V> implements IMap<K, V> {
 
     @Override
     public V put(K key, V value) {
+        if (key == null) return null;
+
         if (_buckets <= _count) {
             resize(_buckets * 2);
         }
@@ -82,6 +84,7 @@ public class HashMap<K, V> implements IMap<K, V> {
 
     @Override
     public V get(K key) {
+        if (key == null) return null;
         if (isEmpty()) return null;
 
         int keyHash = key.hashCode();
@@ -112,6 +115,7 @@ public class HashMap<K, V> implements IMap<K, V> {
 
     @Override
     public boolean remove(K key) {
+        if (key == null) return false;
         if (isEmpty()) return false;
 
         int keyHash = key.hashCode();
@@ -156,6 +160,7 @@ public class HashMap<K, V> implements IMap<K, V> {
 
     @Override
     public final boolean contains(K key) {
+        if (key == null) return false;
         if (isEmpty()) return false;
 
         int keyHash = key.hashCode();
